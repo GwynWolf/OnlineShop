@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.order;
 
 import com.onlineshop.entity.Order;
 import org.hibernate.Session;

@@ -1,25 +1,26 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.category;
 
-import com.onlineshop.entity.Products;
-import com.onlineshop.entity.Variants;
+import com.onlineshop.entity.Category;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-public class VariantsDAOImpl implements VariantsDAO {
+public class CategoryDAOImpl implements CategoryDAO {
+
     @Autowired
-    private SessionFactory sessionFactory;
+    SessionFactory sessionFactory;
 
     @Override
-    public List<Variants> getVariantByProductID(int productID) {
+    @Transactional
+    public List<Category> getAllCategories() {
         Session session = sessionFactory.getCurrentSession();
-        Query<Variants> query = session.createQuery("from Variants where productId = :id", Variants.class);
+        Query<Category> query = session.createQuery("from Category", Category.class);
         return query.getResultList();
     }
-
 }

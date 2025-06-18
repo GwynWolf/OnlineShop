@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.variants;
 
 import com.onlineshop.entity.Variants;
 

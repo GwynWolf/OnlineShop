@@ -1,26 +1,24 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.images;
 
-import com.onlineshop.entity.Category;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import com.onlineshop.entity.Images;
 
 import java.util.List;
 
 @Repository
-public class CategoryDAOImpl implements CategoryDAO {
+public class ImagesDAOImpl implements ImagesDAO {
 
     @Autowired
-    SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Override
-    @Transactional
-    public List<Category> getAllCategories() {
+    public List<Images> getImagesByProductID(int productID) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Category> query = session.createQuery("from Category", Category.class);
+        Query<Images> query = session.createQuery("from Images where productId = :productID", Images.class);
         return query.getResultList();
     }
 }

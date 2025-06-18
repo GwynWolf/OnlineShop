@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.category;
 
 import com.onlineshop.entity.Category;
 

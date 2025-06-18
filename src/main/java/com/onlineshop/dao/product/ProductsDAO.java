@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.product;
 
 import com.onlineshop.entity.Products;
 

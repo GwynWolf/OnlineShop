@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.product;
 
 import com.onlineshop.entity.Products;
 import org.hibernate.Session;
@@ -26,6 +26,7 @@ public class ProductsDAOImpl implements ProductsDAO {
     }
 
     @Override
+    @Transactional
     public Products getProductById(int id) {
         Session session = sessionFactory.getCurrentSession();
         Query<Products> query = session.createQuery("from Products where id = :id", Products.class);

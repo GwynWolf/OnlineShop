@@ -1,4 +1,4 @@
-package com.onlineshop.dao;
+package com.onlineshop.dao.images;
 
 import com.onlineshop.entity.Images;
 
