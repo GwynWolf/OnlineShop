@@ -19,6 +19,7 @@ public class ImagesDAOImpl implements ImagesDAO {
     public List<Images> getImagesByProductID(int productID) {
         Session session = sessionFactory.getCurrentSession();
         Query<Images> query = session.createQuery("from Images where productId = :productID", Images.class);
+        query.setParameter("productID", productID);
         return query.getResultList();
     }
 }

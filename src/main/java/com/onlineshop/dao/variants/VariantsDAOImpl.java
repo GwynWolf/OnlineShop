@@ -18,6 +18,7 @@ public class VariantsDAOImpl implements VariantsDAO {
     public List<Variants> getVariantByProductID(int productID) {
         Session session = sessionFactory.getCurrentSession();
         Query<Variants> query = session.createQuery("from Variants where productId = :id", Variants.class);
+        query.setParameter("id", productID);
         return query.getResultList();
     }
 

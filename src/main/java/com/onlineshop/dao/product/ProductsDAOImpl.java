@@ -30,6 +30,7 @@ public class ProductsDAOImpl implements ProductsDAO {
     public Products getProductById(int id) {
         Session session = sessionFactory.getCurrentSession();
         Query<Products> query = session.createQuery("from Products where id = :id", Products.class);
+        query.setParameter("id", id);
         return query.getSingleResult();
     }
 }
