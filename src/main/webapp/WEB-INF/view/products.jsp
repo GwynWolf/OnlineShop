@@ -3,82 +3,63 @@
 
 <html>
 <head>
-    <title>Список продуктов</title>
+    <title>Список товаров</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 6px;
+        .product-card {
+            display: inline-block;
+            width: 200px;
             border: 1px solid #ccc;
-            text-align: left;
+            padding: 10px;
+            margin: 10px;
+            vertical-align: top;
+            text-align: center;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .product-card img {
+            max-width: 100%;
+            height: auto;
         }
 
-        .hidden {
-            color: red;
+        .product-card a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        .product-card a:hover {
+            color: darkblue;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<h2>Список продуктов</h2>
+<h2>Товары</h2>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>URL</th>
-        <th>Название</th>
-        <th>Бренд</th>
-        <th>Аннотация</th>
-        <th>Видимость</th>
-        <th>Позиция</th>
-        <th>Рейтинг</th>
-        <th>Голосов</th>
-        <th>Спец. пометка</th>
-        <th>Избранное</th>
-        <th>Категория</th>
-        <th>Изображение</th>
-        <th>Дата создания</th>
-        <th>Изменено</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="product" items="${products}">
-        <tr>
-            <td>${product.id}</td>
-            <td>${product.url}</td>
-            <td>${product.name}</td>
-            <td>${product.brandId}</td>
-            <td>${product.annotation}</td>
-            <td>
-                <c:choose>
-                    <c:when test="${product.visible}">✅</c:when>
-                    <c:otherwise><span class="hidden">❌</span></c:otherwise>
-                </c:choose>
-            </td>
-            <td>${product.position}</td>
-            <td>${product.rating}</td>
-            <td>${product.votes}</td>
-            <td>${product.special}</td>
-            <td>
-                <c:if test="${product.featured}">🌟</c:if>
-            </td>
-            <td>${product.mainCategoryId}</td>
-            <td>${product.mainImageId}</td>
-            <td>${product.created}</td>
-            <td>${product.lastModify}</td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+<a href="/OnlineStore/admin" class="back-button">← Назад в админку</a>
+
+<c:forEach var="product" items="${products}">
+    <div class="product-card">
+        <a href="/OnlineStore/admin/products/${product.id}">
+            <img src="/images/products/${product.mainImageId}.jpg" alt="${product.name}" />
+            <div>${product.name}</div>
+        </a>
+        <div style="font-size: 12px; color: gray;">${product.url}</div>
+    </div>
+</c:forEach>
 
 </body>
 </html>

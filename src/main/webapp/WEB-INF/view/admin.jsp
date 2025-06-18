@@ -7,10 +7,10 @@
 <body>
 <h1>Админ панель</h1>
 <ul>
-    <li><a href="/admin/products">Продукты</a></li>
-    <li><a href="/admin/categories">Категории</a></li>
-    <li><a href="/admin/filters">Фильтры</a></li>
-    <li><a href="/admin/orders">Заказы</a></li>
+    <li><a href="/OnlineStore/admin/products">Продукты</a></li>
+    <li><a href="/OnlineStore/admin/categories">Категории</a></li>
+    <li><a href="/OnlineStore/admin/filters">Фильтры</a></li>
+    <li><a href="/OnlineStore/admin/orders">Заказы</a></li>
 </ul>
 </body>
 </html>
