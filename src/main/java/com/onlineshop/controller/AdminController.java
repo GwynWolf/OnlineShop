@@ -1,17 +1,15 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.dao.CategoryDAO;
-import com.onlineshop.dao.OrderDAO;
+import com.onlineshop.dao.ImagesDAO;
 import com.onlineshop.dao.ProductsDAO;
-import com.onlineshop.entity.Category;
-import com.onlineshop.entity.Order;
+import com.onlineshop.dao.VariantsDAO;
+import com.onlineshop.entity.Images;
 import com.onlineshop.entity.Products;
+import com.onlineshop.entity.Variants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,15 +19,17 @@ public class AdminController {
 
     @Autowired
     private ProductsDAO productsDAO;
+
     @Autowired
-    private CategoryDAO categoryDAO;
+    private VariantsDAO variantsDAO;
+
     @Autowired
-    private OrderDAO orderDAO;
+    private ImagesDAO imagesDAO;
 
 
     @GetMapping
     public String adminPanel() {
-        return "admin";
+        return "admin"; // → /view/admin.jsp
     }
 
 
@@ -37,21 +37,18 @@ public class AdminController {
     public String showAllProducts(Model model) {
         List<Products> productsList = productsDAO.getAllProducts();
         model.addAttribute("products", productsList);
-        return "products";
+        return "products"; // → /view/products.jsp
     }
 
-    @GetMapping("/categories")
-    public String showAllCategories(Model model) {
-        List<Category> categories = categoryDAO.getAllCategories();
-        model.addAttribute("categories", categories);
-        return "categories";
-    }
 
-    @GetMapping("/orders")
-    public String showAllOrders(Model model){
-        List<Order> orders = orderDAO.getAllOrders();
-        model.addAttribute("orders", orders);
-        return "orders";
+    @GetMapping("/products/{id}")
+    public String showProductDetails(@PathVariable("id") int id, Model model) {
+        Products product = productsDAO.getProductById(id);
+        List<Variants> variantsList = variantsDAO.getVariantByProductID(id);
+        List<Images> imagesList = imagesDAO.getImagesByProductID(id);
+        model.addAttribute("product", product);
+        model.addAttribute("variants", variantsList);
+        model.addAttribute("images", imagesList);
+        return "product-detail"; // → /view/product-detail.jsp
     }
-
 }
