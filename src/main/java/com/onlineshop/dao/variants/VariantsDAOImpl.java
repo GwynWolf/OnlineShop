@@ -1,6 +1,7 @@
 package com.onlineshop.dao.variants;
 
 import com.onlineshop.entity.Variants;
+import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -15,6 +16,7 @@ public class VariantsDAOImpl implements VariantsDAO {
     private SessionFactory sessionFactory;
 
     @Override
+    @Transactional
     public List<Variants> getVariantByProductID(int productID) {
         Session session = sessionFactory.getCurrentSession();
         Query<Variants> query = session.createQuery("from Variants where productId = :id", Variants.class);
