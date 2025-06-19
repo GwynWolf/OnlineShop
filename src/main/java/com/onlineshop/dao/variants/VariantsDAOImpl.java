@@ -24,4 +24,18 @@ public class VariantsDAOImpl implements VariantsDAO {
         return query.getResultList();
     }
 
+    @Override
+    @Transactional
+    public void save(Variants variant) {
+        Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(variant);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Variants variant) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(variant);
+    }
+
 }
