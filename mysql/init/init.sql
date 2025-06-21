@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `callbacks` (
 );
 CREATE TABLE IF NOT EXISTS `categories` (
                                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                                 `parent_id` int(11) NOT NULL DEFAULT '0',
+                                 `parent_id` int(11) DEFAULT NULL,
                                  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `name_h1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `meta_title` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -565,3 +565,5 @@ CREATE TABLE IF NOT EXISTS `variants` (
                                KEY `external_id` (`external_id`),
                                KEY `sku` (`sku`(100))
 );
+
+UPDATE categories SET parent_id = NULL WHERE parent_id = 0;
