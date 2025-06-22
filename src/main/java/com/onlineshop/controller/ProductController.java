@@ -11,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Controller("/admin/products")
+@Controller
+@RequestMapping("/admin/products")
 public class ProductController {
     @Autowired
     private ProductsDAO productsDAO;
@@ -32,7 +34,7 @@ public class ProductController {
         return "products";
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public String showProductDetails(@PathVariable("id") int id, Model model) {
         System.out.println(id);
         Products product = productsDAO.getProductById(id);

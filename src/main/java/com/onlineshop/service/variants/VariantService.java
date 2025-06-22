@@ -1,6 +1,5 @@
-package com.onlineshop.service;
+package com.onlineshop.service.variants;
 
-import com.onlineshop.entity.Products;
 import com.onlineshop.entity.Variants;
 
 import java.util.List;
