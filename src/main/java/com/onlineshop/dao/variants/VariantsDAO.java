@@ -5,7 +5,8 @@ import com.onlineshop.entity.Variants;
 import java.util.List;
 
 public interface VariantsDAO {
-    public List<Variants> getVariantByProductID(int productID);
+    public List<Variants> getByProductID(int productID);
+    public Variants getById(int variantID);
 
     public void save(Variants variant);
 

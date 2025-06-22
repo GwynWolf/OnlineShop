@@ -17,11 +17,16 @@ public class VariantsDAOImpl implements VariantsDAO {
 
     @Override
     @Transactional
-    public List<Variants> getVariantByProductID(int productID) {
+    public List<Variants> getByProductID(int productID) {
         Session session = sessionFactory.getCurrentSession();
         Query<Variants> query = session.createQuery("from Variants where productId = :id", Variants.class);
         query.setParameter("id", productID);
         return query.getResultList();
+    }
+
+    @Override
+    public Variants getById(int variantID) {
+        return null;
     }
 
     @Override
