@@ -1,6 +1,5 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.dao.category.CategoryDAO;
 import com.onlineshop.dao.images.ImagesDAO;
 import com.onlineshop.dao.order.OrderDAO;
 import com.onlineshop.dao.product.ProductsDAO;
@@ -9,7 +8,9 @@ import com.onlineshop.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -28,10 +29,6 @@ public class AdminController {
 
     @Autowired
     private OrderDAO orderDAO;
-
-    @Autowired
-    private CategoryDAO categoryDAO;
-
 
     @GetMapping
     public String adminPanel() {
@@ -52,14 +49,6 @@ public class AdminController {
         model.addAttribute("orders", orderList);
         return "orders";
     }
-
-    @GetMapping("/categories")
-    public String showAllCategories(Model model) {
-        List<Category> categoryList = categoryDAO.getAllCategories();
-        model.addAttribute("categories", categoryList);
-        return "categories";
-    }
-
 
     @GetMapping("/products/{id}")
     public String showProductDetails(@PathVariable("id") int id, Model model) {

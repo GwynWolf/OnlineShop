@@ -1,26 +1,42 @@
 package com.onlineshop.dao.category;
 
 import com.onlineshop.entity.Category;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 public class CategoryDAOImpl implements CategoryDAO {
 
-    @Autowired
-    SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    @Transactional
     public List<Category> getAllCategories() {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Category> query = session.createQuery("from Category", Category.class);
-        return query.getResultList();
+        return entityManager.createQuery("from Category", Category.class).getResultList();
+    }
+
+    @Override
+    public void saveCategory(Category category) {
+        if (category.getId() == null) {
+            entityManager.persist(category);
+        } else {
+            entityManager.merge(category);
+        }
+    }
+
+    @Override
+    public Category getCategory(int id) {
+        return entityManager.find(Category.class, id);
+    }
+
+    @Override
+    public void deleteCategory(int id) {
+        Category category = getCategory(id);
+        if (category != null) {
+            entityManager.remove(category);
+        }
     }
 }
