@@ -80,7 +80,7 @@
 <div class="container">
     <h2>Редактирование товара</h2>
 
-    <form action="${pageContext.request.contextPath}/admin/products/update" method="post">
+    <form action="${pageContext.request.contextPath}/admin/products/save" method="post">
         <input type="hidden" name="id" value="${product.id}" />
 
         <div class="form-group">
@@ -104,8 +104,6 @@
                 Отображать товар на сайте
             </label>
         </div>
-
-
 
 
         <button type="submit" class="btn">Сохранить изменения</button>

@@ -3,6 +3,7 @@ package com.onlineshop.dao.product;
 import com.onlineshop.entity.Category;
 import com.onlineshop.entity.Products;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -15,7 +16,7 @@ import java.util.List;
 @Repository
 public class ProductsDAOImpl implements ProductsDAO {
 
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override
@@ -27,7 +28,7 @@ public class ProductsDAOImpl implements ProductsDAO {
     @Override
     @Transactional
     public Products getProductById(int id) {
-        return entityManager.createQuery("from Products where id = :id", Products.class).getSingleResult();
+        return entityManager.find(Products.class, id);
 
     }
 
@@ -42,6 +43,7 @@ public class ProductsDAOImpl implements ProductsDAO {
     }
 
     @Override
+    @Transactional
     public void delete(Products product) {
         if (product != null) {
             entityManager.remove(product);

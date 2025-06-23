@@ -1,6 +1,8 @@
 package com.onlineshop.dao.variants;
 
 import com.onlineshop.entity.Variants;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,35 +14,35 @@ import java.util.List;
 
 @Repository
 public class VariantsDAOImpl implements VariantsDAO {
-    @Autowired
-    private SessionFactory sessionFactory;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     @Transactional
     public List<Variants> getByProductID(int productID) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Variants> query = session.createQuery("from Variants where productId = :id", Variants.class);
-        query.setParameter("id", productID);
-        return query.getResultList();
+        return entityManager.createQuery(
+                        "from Variants where productId = :productID", Variants.class)
+                .setParameter("productID", productID)
+                .getResultList();
     }
 
     @Override
+    @Transactional
     public Variants getById(int variantID) {
-        return null;
+        return entityManager.find(Variants.class, variantID);
     }
 
     @Override
     @Transactional
     public void save(Variants variant) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(variant);
+       entityManager.persist(variant);
     }
 
     @Override
     @Transactional
     public void delete(Variants variant) {
-        Session session = sessionFactory.getCurrentSession();
-        session.delete(variant);
+        entityManager.remove(variant);
     }
 
 }
