@@ -18,22 +18,9 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private OrderDAO orderDAO;
-
     @GetMapping
     public String adminPanel() {
         return "admin";
-    }
-
-
-
-
-    @GetMapping("/orders")
-    public String showAllOrders(Model model) {
-        List<Order> orderList = orderDAO.getAllOrders();
-        model.addAttribute("orders", orderList);
-        return "orders";
     }
 
 
