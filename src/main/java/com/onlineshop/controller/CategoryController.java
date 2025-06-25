@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin/categories")
 public class CategoryController {
 
@@ -48,6 +48,16 @@ public class CategoryController {
     @GetMapping("/delete")
     public String deleteCategory(@RequestParam("id") int id) {
         categoryService.delete(id);
+        return "redirect:/admin/categories";
+    }
+
+    @GetMapping
+    public String restoreCategory(@RequestParam("id") int id) {
+        Category category = categoryService.get(id);
+        if (category != null) {
+            category.setVisible(true);
+            categoryService.save(category);
+        }
         return "redirect:/admin/categories";
     }
 }

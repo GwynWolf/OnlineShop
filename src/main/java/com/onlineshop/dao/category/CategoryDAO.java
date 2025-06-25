@@ -7,9 +7,12 @@ import java.util.List;
 public interface CategoryDAO {
     List<Category> getAllCategories();
 
+    List<Category> getAllCategoriesIncludingHidden();
+
     void saveCategory(Category category);
 
     Category getCategory(int id);
 
     void deleteCategory(int id);
+    boolean slugExists(String slug);
 }

@@ -15,7 +15,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ToString.Exclude
     @ManyToOne
@@ -31,6 +31,9 @@ public class Category {
 
     @Column(nullable = false)
     private String name = "";
+
+    @Column(unique = true)
+    private String slug = "";
 
     @Column(name = "name_h1", nullable = false)
     private String nameH1 = "";
@@ -86,10 +89,10 @@ public class Category {
     @Column(name = "auto_annotation", columnDefinition = "mediumtext")
     private String autoAnnotation = "";
 
-    @Column(name = "last_modify", insertable = false, updatable = false)
+    @Column(name = "updatedAt", insertable = false, updatable = false)
     private Timestamp lastModify;
 
-    private Timestamp created;
+    private Timestamp createdAt;
 
     @Column(name = "auto_h1")
     private String autoH1 = "";

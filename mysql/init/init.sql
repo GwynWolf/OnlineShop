@@ -128,15 +128,15 @@ CREATE TABLE IF NOT EXISTS `categories` (
                                  `auto_meta_desc` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `auto_description` mediumtext COLLATE utf8mb4_unicode_ci,
                                  `auto_annotation` mediumtext COLLATE utf8mb4_unicode_ci,
-                                 `last_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                 `created` timestamp NULL DEFAULT NULL,
+                                 `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 `createdAt` timestamp NULL DEFAULT NULL,
                                  `auto_h1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                                  PRIMARY KEY (`id`),
                                  KEY `parent_id` (`parent_id`),
                                  KEY `position` (`position`),
                                  KEY `visible` (`visible`),
                                  KEY `external_id` (`external_id`),
-                                 KEY `created` (`created`),
+                                 KEY `created` (`createdAt`),
                                  KEY `url` (`url`(100))
 );
 CREATE TABLE IF NOT EXISTS `categories_features` (

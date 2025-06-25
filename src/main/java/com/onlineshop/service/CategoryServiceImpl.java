@@ -3,6 +3,7 @@ package com.onlineshop.service;
 import com.onlineshop.dao.category.CategoryDAO;
 import com.onlineshop.entity.CategoryNode;
 import com.onlineshop.entity.Category;
+import com.onlineshop.util.SlugUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void save(Category category) {
+        if (category.getSlug() == null || category.getSlug().isEmpty()) {
+            String generatedSlug = SlugUtil.toSlug(category.getName());
+            int suffix = 1;
+            String originalSlug = generatedSlug;
+            while (categoryDAO.slugExists(generatedSlug)) {
+                generatedSlug = originalSlug + "-" + suffix++;
+            }
+            category.setSlug(generatedSlug);
+        }
+        if (category.getParentId() != null) {
+            Category parent = categoryDAO.getCategory(category.getParentId());
+            if (parent == null) {
+                throw new IllegalArgumentException("Parent category with ID " + category.getParentId() + "does no exist.");
+            }
+        }
         categoryDAO.saveCategory(category);
     }
 
@@ -44,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryNode> buildCategoryTree(List<Category> categories) {
-        Map<Integer, CategoryNode> map = new HashMap<>();
+        Map<Long, CategoryNode> map = new HashMap<>();
         List<CategoryNode> roots = new ArrayList<>();
 
         for (Category c : categories) {

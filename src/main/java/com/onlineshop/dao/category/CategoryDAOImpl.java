@@ -15,7 +15,12 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public List<Category> getAllCategories() {
-        return entityManager.createQuery("from Category", Category.class).getResultList();
+        return entityManager.createQuery("FROM Category c WHERE c.visible = true", Category.class).getResultList();
+    }
+
+    @Override
+    public List<Category> getAllCategoriesIncludingHidden() {
+        return entityManager.createQuery("FROM Category", Category.class).getResultList();
     }
 
     @Override
@@ -36,7 +41,15 @@ public class CategoryDAOImpl implements CategoryDAO {
     public void deleteCategory(int id) {
         Category category = getCategory(id);
         if (category != null) {
-            entityManager.remove(category);
+            category.setVisible(false);
+            entityManager.merge(category);
         }
+    }
+
+    public boolean slugExists(String slug) {
+        Long count = entityManager.createQuery("SELECT COUNT(c) FROM Category c WHERE c.slug = :slug", Long.class)
+                .setParameter("slug", slug)
+                .getSingleResult();
+        return count > 0;
     }
 }
