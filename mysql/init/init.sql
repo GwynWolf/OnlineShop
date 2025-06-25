@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `callbacks` (
 );
 CREATE TABLE IF NOT EXISTS `categories` (
                                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                                 `parent_id` int(11) DEFAULT NULL,
+                                 `parent_id` BIGINT DEFAULT NULL,
                                  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `name_h1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `meta_title` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
                                  `meta_description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `annotation` mediumtext COLLATE utf8mb4_unicode_ci,
                                  `description` mediumtext COLLATE utf8mb4_unicode_ci,
+                                 `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                                  `position` int(11) NOT NULL DEFAULT '0',
@@ -129,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
                                  `auto_description` mediumtext COLLATE utf8mb4_unicode_ci,
                                  `auto_annotation` mediumtext COLLATE utf8mb4_unicode_ci,
                                  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                 `createdAt` timestamp NULL DEFAULT NULL,
+                                 `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                  `auto_h1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                                  PRIMARY KEY (`id`),
                                  KEY `parent_id` (`parent_id`),
@@ -567,3 +568,9 @@ CREATE TABLE IF NOT EXISTS `variants` (
 );
 
 UPDATE categories SET parent_id = NULL WHERE parent_id = 0;
+INSERT INTO categories (name, slug, parent_id, visible) VALUES
+                                                            ('Electronics', 'electronics', NULL, 1),
+                                                            ('Phones', 'phones', 1, 1),
+                                                            ('Laptops', 'laptops', 1, 1),
+                                                            ('Clothing', 'clothing', NULL, 1),
+                                                            ('Men Clothing', 'men-clothing', 4, 1);

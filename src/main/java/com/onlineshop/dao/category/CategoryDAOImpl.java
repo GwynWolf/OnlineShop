@@ -3,8 +3,13 @@ package com.onlineshop.dao.category;
 import com.onlineshop.entity.Category;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -33,12 +38,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public Category getCategory(int id) {
+    public Category getCategory(long id) {
         return entityManager.find(Category.class, id);
     }
 
     @Override
-    public void deleteCategory(int id) {
+    public void deleteCategory(long id) {
         Category category = getCategory(id);
         if (category != null) {
             category.setVisible(false);
@@ -46,10 +51,28 @@ public class CategoryDAOImpl implements CategoryDAO {
         }
     }
 
+    @Override
     public boolean slugExists(String slug) {
         Long count = entityManager.createQuery("SELECT COUNT(c) FROM Category c WHERE c.slug = :slug", Long.class)
                 .setParameter("slug", slug)
                 .getSingleResult();
         return count > 0;
+    }
+
+    public List<Category> findCategories(Boolean visible, Long parentId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Category> query = cb.createQuery(Category.class);
+        Root<Category> root = query.from(Category.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (visible != null) {
+            predicates.add(cb.equal(root.get("visible"), visible));
+        }
+        if (parentId != null) {
+            predicates.add(cb.equal(root.get("parentId"), parentId));
+        }
+
+        query.select(root).where(predicates.toArray(new Predicate[0]));
+        return entityManager.createQuery(query).getResultList();
     }
 }
