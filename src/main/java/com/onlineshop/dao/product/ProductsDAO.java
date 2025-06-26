@@ -10,4 +10,5 @@ public interface ProductsDAO {
 
     public void save(Products product);
     public void delete(Products product);
+    public void delete(int id);
 }

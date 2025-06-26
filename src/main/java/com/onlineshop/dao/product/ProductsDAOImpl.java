@@ -45,8 +45,12 @@ public class ProductsDAOImpl implements ProductsDAO {
     @Override
     @Transactional
     public void delete(Products product) {
-        if (product != null) {
             entityManager.remove(product);
-        }
+    }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        entityManager.remove(entityManager.find(Products.class, id));
     }
 }
