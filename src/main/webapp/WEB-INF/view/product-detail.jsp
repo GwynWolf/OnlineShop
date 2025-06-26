@@ -80,7 +80,7 @@
 <div class="container">
     <h2>Редактирование товара</h2>
 
-    <form action="${pageContext.request.contextPath}/admin/products/save" method="post">
+    <form method="post" action="${pageContext.request.contextPath}/admin/products">
         <input type="hidden" name="id" value="${product.id}" />
 
         <div class="form-group">

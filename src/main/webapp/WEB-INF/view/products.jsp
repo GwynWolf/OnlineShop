@@ -54,7 +54,7 @@
 <c:forEach var="product" items="${products}">
     <div class="product-card">
         <a href="/OnlineStore/admin/products/${product.id}">
-            <img src="/images/products/${product.mainImageId}.jpg" alt="${product.name}" />
+            <!--<img src="/images/products/${product.mainImageId}.jpg" alt="${product.name}" />-->
             <div>${product.name}</div>
         </a>
         <div style="font-size: 12px; color: gray;">${product.url}</div>
