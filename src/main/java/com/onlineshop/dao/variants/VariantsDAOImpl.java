@@ -45,4 +45,10 @@ public class VariantsDAOImpl implements VariantsDAO {
         entityManager.remove(variant);
     }
 
+    @Override
+    @Transactional
+    public void delete(int id) {
+        entityManager.remove(entityManager.find(Variants.class, id));
+    }
+
 }

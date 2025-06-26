@@ -11,4 +11,5 @@ public interface VariantsDAO {
     public void save(Variants variant);
 
     void delete(Variants variant);
+    void delete(int id);
 }

@@ -36,4 +36,9 @@ public class VariantServiceImpl implements VariantService {
     public void delete(Variants variants) {
         variantsDAO.delete(variants);
     }
+
+    @Override
+    public void delete(int id) {
+        variantsDAO.delete(id);
+    }
 }

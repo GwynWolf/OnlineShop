@@ -10,4 +10,5 @@ public interface VariantService {
     public void save(Variants variants);
     public void update(Variants variants);
     public void delete(Variants variants);
+    public void delete(int id);
 }
