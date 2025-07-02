@@ -1,4 +1,4 @@
-package com.onlineshop.service;
+package com.onlineshop.service.category;
 
 import com.onlineshop.entity.CategoryNode;
 import com.onlineshop.entity.Category;
