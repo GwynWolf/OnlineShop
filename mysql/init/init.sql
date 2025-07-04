@@ -347,43 +347,28 @@ CREATE TABLE IF NOT EXISTS `order_history` (
                                     PRIMARY KEY (`id`),
                                     KEY `order_id` (`order_id`)
 );
-CREATE TABLE IF NOT EXISTS `orders` (
-                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                             `delivery_id` int(11) DEFAULT '0',
-                             `delivery_price` decimal(10,2) NOT NULL DEFAULT '0.00',
-                             `payment_method_id` int(11) DEFAULT '0',
-                             `paid` tinyint(1) NOT NULL DEFAULT '0',
-                             `payment_date` datetime DEFAULT NULL,
-                             `closed` tinyint(1) NOT NULL DEFAULT '0',
-                             `date` datetime DEFAULT NULL,
-                             `user_id` int(11) DEFAULT '0',
-                             `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                             `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `phone` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT '',
-                             `phone_to_delete` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `comment` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `status_id` int(11) NOT NULL DEFAULT '0',
-                             `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-                             `payment_details` mediumtext COLLATE utf8mb4_unicode_ci,
-                             `ip` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                             `undiscounted_total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
-                             `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
-                             `note` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                             `separate_delivery` tinyint(1) DEFAULT '0',
-                             `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                             `lang_id` int(11) NOT NULL DEFAULT '0',
-                             `referer_channel` enum('email','search','social','referral','unknown') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                             `referer_source` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                             PRIMARY KEY (`id`),
-                             KEY `login` (`user_id`),
-                             KEY `written_off` (`closed`),
-                             KEY `date` (`date`),
-                             KEY `status` (`status_id`),
-                             KEY `payment_status` (`paid`),
-                             KEY `code` (`url`(100)),
-                             KEY `phone` (`phone`)
+CREATE TABLE IF NOT EXISTS orders (
+                                    'id' BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                    'user_id' BIGINT NOT NULL,
+                                    'status' VARCHAR(20) NOT NULL,
+                                    'payment_method' VARCHAR(30) NOT NULL,
+                                    'payment_status' VARCHAR(30) NOT NULL,
+                                    'delivery_address' TEXT,
+                                    'delivery_type' VARCHAR(50),
+                                    'delivery_price' DECIMAL(10,2),
+                                    'total_price' DECIMAL(10,2),
+                                    'created_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                    'updated_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS order_products (
+                                    'id' BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                    'order_id' BIGINT NOT NULL,
+                                    'product_id' BIGINT NOT NULL,
+                                    'product_name' VARCHAR(255),
+                                    'price' DECIMAL(10,2),
+                                    'quantity' INT,
+                                    FOREIGN KEY ('order_id') REFERENCES orders('id') ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `orders_labels` (
                                     `order_id` int(11) NOT NULL,
