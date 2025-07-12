@@ -430,36 +430,17 @@ CREATE TABLE IF NOT EXISTS `payment_methods` (
                                       KEY `position` (`position`)
 );
 CREATE TABLE IF NOT EXISTS `products` (
-                               `id` int(11) NOT NULL AUTO_INCREMENT,
-                               `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `brand_id` int(11) DEFAULT '0',
-                               `name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `annotation` mediumtext COLLATE utf8mb4_unicode_ci,
-                               `description` mediumtext COLLATE utf8mb4_unicode_ci,
-                               `visible` tinyint(1) NOT NULL DEFAULT '1',
-                               `position` int(11) NOT NULL DEFAULT '0',
-                               `meta_title` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `meta_keywords` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `meta_description` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `created` timestamp NULL DEFAULT NULL,
-                               `featured` tinyint(1) DEFAULT '0',
-                               `external_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-                               `rating` float(3,1) DEFAULT '0.0',
-                               `votes` int(11) DEFAULT '0',
-                               `special` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-                               `last_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                               `main_category_id` int(11) DEFAULT NULL,
-                               `main_image_id` int(11) DEFAULT NULL,
-                               PRIMARY KEY (`id`),
-                               KEY `brand_id` (`brand_id`),
-                               KEY `visible` (`visible`),
-                               KEY `position` (`position`),
-                               KEY `external_id` (`external_id`),
-                               KEY `hit` (`featured`),
-                               KEY `main_category_id` (`main_category_id`),
-                               KEY `main_image_id` (`main_image_id`),
-                               KEY `url` (`url`(100)),
-                               KEY `name` (`name`(100))
+                                          `id` INT NOT NULL AUTO_INCREMENT,
+                                          `name` VARCHAR(255) NOT NULL,                     -- Название (обязательное)
+                                          `slug` VARCHAR(255) NOT NULL UNIQUE,              -- Уникальный слаг (автогенерация из name)
+                                          `description` TEXT DEFAULT NULL,                  -- Описание (опционально)
+                                          `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,      -- Цена (>= 0)
+                                          `category_id` INT NOT NULL,                       -- Ссылка на Category (обязательное)
+                                          `is_active` TINYINT(1) NOT NULL DEFAULT 1,        -- Статус (по умолчанию true)
+                                          `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Дата создания
+                                          `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Дата обновления
+                                          PRIMARY KEY (`id`)
+
 );
 CREATE TABLE IF NOT EXISTS `products_categories` (
                                           `product_id` int(11) NOT NULL,
