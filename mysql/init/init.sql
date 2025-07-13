@@ -548,3 +548,36 @@ CREATE TABLE IF NOT EXISTS `variants` (
 );
 
 UPDATE categories SET parent_id = NULL WHERE parent_id = 0;
+
+-- Таблица фильтров (например: Цвет, Объем, Производитель)
+CREATE TABLE IF NOT EXISTS filter_options (
+                                              id INT AUTO_INCREMENT PRIMARY KEY,
+                                              name VARCHAR(255) NOT NULL,
+                                              category_id INT NOT NULL,
+                                              is_main BOOLEAN NOT NULL DEFAULT FALSE,
+                                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                                              FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+-- Таблица значений фильтров (например: Красный, Синий)
+CREATE TABLE IF NOT EXISTS filter_values (
+                                             id INT AUTO_INCREMENT PRIMARY KEY,
+                                             option_id INT NOT NULL,
+                                             value VARCHAR(255) NOT NULL,
+                                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                                             FOREIGN KEY (option_id) REFERENCES filter_options(id) ON DELETE CASCADE
+);
+
+-- Таблица связей товара с фильтрами
+CREATE TABLE IF NOT EXISTS product_filter_values (
+                                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                                     product_id INT NOT NULL,
+                                                     option_id INT NOT NULL,
+                                                     value_id INT NOT NULL,
+
+                                                     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+                                                     FOREIGN KEY (option_id) REFERENCES filter_options(id) ON DELETE CASCADE,
+                                                     FOREIGN KEY (value_id) REFERENCES filter_values(id) ON DELETE CASCADE
+);
