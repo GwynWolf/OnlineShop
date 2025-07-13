@@ -1,14 +1,14 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.entity.Order;
+import com.onlineshop.dto.order.OrderCreateDto;
+import com.onlineshop.dto.order.OrderDto;
+import com.onlineshop.dto.order.OrderFilterDto;
 import com.onlineshop.service.order.OrderService;
-import com.onlineshop.service.order.OrderServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -19,45 +19,34 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders(
-    ) {
-        List<Order> orders = orderService.getAll();
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderDto>> getAllOrders() {
+        return ResponseEntity.ok(orderService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable("id") long id) {
-        Order order = orderService.get(id);
-        if (order == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable("id") long id) {
+        return ResponseEntity.ok(orderService.getById(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-        orderService.create(order);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderCreateDto dto) {
+        return ResponseEntity.ok(orderService.create(dto));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> updateOrder(@PathVariable("id") long id,
-                                             @Valid @RequestBody Order updatedOrder) {
-        Order existing = orderService.get(id);
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
-        updatedOrder.setId(id);
-        orderService.update(updatedOrder);
-        return ResponseEntity.ok(updatedOrder);
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable("id") long id,
+                                                @Valid @RequestBody OrderCreateDto dto) {
+        return ResponseEntity.ok(orderService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable("id") long id) {
-        Order order = orderService.get(id);
-        if (order == null) {
-            throw new RuntimeException("Order not found");
-        }
+    public ResponseEntity<Void> deleteOrder(@PathVariable("id") long id) {
         orderService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<OrderDto>> getFilteredOrders(@ModelAttribute OrderFilterDto filter) {
+        return ResponseEntity.ok(orderService.getFilteredOrders(filter));
     }
 }

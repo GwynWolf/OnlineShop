@@ -1,6 +1,6 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.dto.CategoryCreateDto;
+import com.onlineshop.dto.category.CategoryCreateDto;
 import com.onlineshop.entity.CategoryNode;
 import com.onlineshop.entity.Category;
 import jakarta.validation.Valid;

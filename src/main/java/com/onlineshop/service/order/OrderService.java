@@ -1,13 +1,16 @@
 package com.onlineshop.service.order;
 
-import com.onlineshop.entity.Order;
+import com.onlineshop.dto.order.OrderCreateDto;
+import com.onlineshop.dto.order.OrderDto;
+import com.onlineshop.dto.order.OrderFilterDto;
 
 import java.util.List;
 
 public interface OrderService {
-    List<Order> getAll();
-    Order get(Long id);
-    void create(Order order);
-    void update(Order order);
+    List<OrderDto> findAll();
+    OrderDto getById(Long id);
+    OrderDto create(OrderCreateDto dto);
+    OrderDto update(Long id, OrderCreateDto dto);
     void delete(Long id);
+    List<OrderDto> getFilteredOrders(OrderFilterDto filter);
 }

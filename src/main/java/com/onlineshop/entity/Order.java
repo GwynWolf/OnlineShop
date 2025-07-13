@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,9 +22,10 @@ public class Order {
     private String paymentStatus;
     private String deliveryAddress;
     private String deliveryType;
+    @Column(name = "delivery_price", nullable = false)
     private BigDecimal deliveryPrice;
+    @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

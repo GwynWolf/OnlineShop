@@ -348,26 +348,26 @@ CREATE TABLE IF NOT EXISTS `order_history` (
                                     KEY `order_id` (`order_id`)
 );
 CREATE TABLE IF NOT EXISTS orders (
-                                    'id' BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                    'user_id' BIGINT NOT NULL,
-                                    'status' VARCHAR(20) NOT NULL,
-                                    'payment_method' VARCHAR(30) NOT NULL,
-                                    'payment_status' VARCHAR(30) NOT NULL,
-                                    'delivery_address' TEXT,
-                                    'delivery_type' VARCHAR(50),
-                                    'delivery_price' DECIMAL(10,2),
-                                    'total_price' DECIMAL(10,2),
-                                    'created_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                    'updated_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                      user_id BIGINT NOT NULL,
+                                      status VARCHAR(20) NOT NULL,
+                                      payment_method VARCHAR(30) NOT NULL,
+                                      payment_status VARCHAR(30) NOT NULL,
+                                      delivery_address TEXT,
+                                      delivery_type VARCHAR(50),
+                                      delivery_price DECIMAL(10,2) NOT NULL,
+                                      total_price DECIMAL(10,2) NOT NULL,
+                                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS order_products (
-                                    'id' BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                    'order_id' BIGINT NOT NULL,
-                                    'product_id' BIGINT NOT NULL,
-                                    'product_name' VARCHAR(255),
-                                    'price' DECIMAL(10,2),
-                                    'quantity' INT,
+                                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                    order_id BIGINT NOT NULL,
+                                    product_id BIGINT NOT NULL,
+                                    product_name VARCHAR(255),
+                                    price DECIMAL(10,2),
+                                    quantity INT,
                                     FOREIGN KEY ('order_id') REFERENCES orders('id') ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS `orders_labels` (
