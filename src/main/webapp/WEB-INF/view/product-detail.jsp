@@ -15,8 +15,8 @@
             padding: 20px;
         }
 
-        h2, h3 {
-            margin-bottom: 15px;
+        h2 {
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -35,13 +35,6 @@
             box-sizing: border-box;
         }
 
-        .image-thumb {
-            width: 100px;
-            height: auto;
-            display: block;
-            margin-top: 10px;
-        }
-
         .btn {
             padding: 8px 12px;
             background-color: #007bff;
@@ -57,28 +50,12 @@
         .btn:hover {
             background-color: #0056b3;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-
-        .actions {
-            white-space: nowrap;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Редактирование товара</h2>
+    <h2>${product.id != null ? "Редактировать товар" : "Создать новый товар"}</h2>
 
     <form method="post" action="${pageContext.request.contextPath}/admin/products">
         <input type="hidden" name="id" value="${product.id}" />
@@ -89,8 +66,8 @@
         </div>
 
         <div class="form-group">
-            <label for="url">URL</label>
-            <input type="text" name="url" id="url" value="${product.url}" required />
+            <label for="slug">Слаг (URL)</label>
+            <input type="text" name="slug" id="slug" value="${product.slug}" required />
         </div>
 
         <div class="form-group">
@@ -99,49 +76,31 @@
         </div>
 
         <div class="form-group">
+            <label for="price">Цена</label>
+            <input type="number" name="price" id="price" value="${product.price}" min="0" step="0.01" required />
+        </div>
+
+        <div class="form-group">
+            <label for="categoryId">Категория</label>
+            <select name="categoryId" id="categoryId" required>
+                <c:forEach var="category" items="${categories}">
+                    <option value="${category.id}" ${category.id == product.categoryId ? "selected" : ""}>
+                            ${category.name}
+                    </option>
+                </c:forEach>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label>
-                <input type="checkbox" name="visible" value="1" ${product.visible ? "checked" : ""} />
+                <input type="checkbox" name="isActive" value="true" ${product.isActive ? "checked" : ""} />
                 Отображать товар на сайте
             </label>
         </div>
 
-
-        <button type="submit" class="btn">Сохранить изменения</button>
+        <button type="submit" class="btn">Сохранить</button>
         <a class="btn" href="${pageContext.request.contextPath}/admin/products">← Назад</a>
     </form>
-
-    <h3>Варианты товара</h3>
-
-    <a class="btn" href="${pageContext.request.contextPath}/admin/variants/add?productId=${product.id}">+ Добавить вариант</a>
-
-    <c:if test="${not empty variants}">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Цена</th>
-                <th>SKU</th>
-                <th class="actions">Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="variant" items="${variants}">
-                <tr>
-                    <td>${variant.id}</td>
-                    <td>${variant.name}</td>
-                    <td>${variant.price}</td>
-                    <td>${variant.sku}</td>
-                    <td class="actions">
-                        <a class="btn" href="${pageContext.request.contextPath}/admin/variants/edit/${variant.id}">Редактировать</a>
-                        <a class="btn" href="${pageContext.request.contextPath}/admin/variants/delete/${variant.id}">Удалить</a>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:if>
-
 </div>
 
 </body>
