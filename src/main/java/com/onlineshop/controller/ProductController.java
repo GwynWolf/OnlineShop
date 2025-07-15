@@ -1,23 +1,14 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.dao.images.ImagesDAO;
-import com.onlineshop.dao.product.ProductsDAO;
-import com.onlineshop.dao.variants.VariantsDAO;
 import com.onlineshop.entity.Category;
-import com.onlineshop.entity.Images;
 import com.onlineshop.entity.Products;
-import com.onlineshop.entity.Variants;
 import com.onlineshop.service.category.CategoryService;
 import com.onlineshop.service.product.ProductService;
-import com.onlineshop.service.variants.VariantService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,7 +19,6 @@ public class ProductController {
 
     @Autowired
     private CategoryService categoryService;
-
 
     @GetMapping()
     public String showAll(Model model) {
@@ -58,9 +48,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public String saveOrUpdate(@ModelAttribute("products") Products product) {
+    public void saveOrUpdate(@ModelAttribute("products") Products product) {
         productService.save(product);
-        return "redirect:/admin/products/" + product.getId();
     }
 
     @DeleteMapping("/{id}")
