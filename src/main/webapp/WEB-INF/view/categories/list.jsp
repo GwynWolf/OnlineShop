@@ -19,15 +19,42 @@
 </head>
 <body>
 <h1>Категорії</h1>
-
 <p><a href="${pageContext.request.contextPath}/admin/categories/new">+ Додати категорію</a></p>
 
-<jsp:include page="/WEB-INF/view/categories/tree.jsp">
-    <jsp:param name="nodes" value="${categoryTree}"/>
-</jsp:include>
-
-
-<a href="/OnlineStore/admin" class="back-button">← Назад в админку</a>
-
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Slug</th>
+        <th>Parent</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="category" items="${categoryTree}">
+        <tr>
+            <td>${category.category.id}</td>
+            <td>${category.category.name}</td>
+            <td>${category.category.slug}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${category.category.parent != null}">
+                        ${category.category.parent.name}
+                    </c:when>
+                    <c:otherwise>—</c:otherwise>
+                </c:choose>
+            </td>
+            <td>${category.category.visible ? 'Active' : 'Inactive'}</td>
+            <td>
+                <a href="${pageContext.request.contextPath}/admin/categories/edit?id=${category.category.id}">Edit</a> |
+                <a href="${pageContext.request.contextPath}/admin/categories/delete?id=${category.category.id}"
+                   onclick="return confirm('Ви впевнені?');">Delete</a>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
 </body>
 </html>
