@@ -74,7 +74,7 @@ public class SlugUtil {
         translitMap.put('Ь', "");
         translitMap.put('ь', "");
         translitMap.put('\'', "");
-        translitMap.put('’', ""); // апострофи
+        translitMap.put('’', "");
     }
 
     public static String toSlug(String input) {
