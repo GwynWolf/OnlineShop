@@ -3,7 +3,8 @@ package com.onlineshop.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -14,60 +15,39 @@ public class Products {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Название (обязательное)
     @Column(nullable = false, length = 255)
-    private String url = "";
+    private String name;
 
-    @Column(name = "brand_id")
-    private Integer brandId = 0;
+    // Слаг, уникальный (автогенерация на уровне приложения)
+    @Column(nullable = false, unique = true, length = 255)
+    private String slug;
 
-    @Column(nullable = false, length = 512)
-    private String name = "";
-
-    @Column(columnDefinition = "mediumtext")
-    private String annotation;
-
-    @Column(columnDefinition = "mediumtext")
+    // Описание (опционально)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-    private Boolean visible = true;
+    // Цена (>= 0), обязательная
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
-    @Column(nullable = false)
-    private Integer position = 0;
+    // ID категории (обязательное)
+    @Column(name = "category_id", nullable = false)
+    private Integer categoryId;
 
-    @Column(name = "meta_title", nullable = false, length = 512)
-    private String metaTitle = "";
+    // Активен ли товар (по умолчанию true)
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
-    @Column(name = "meta_keywords", nullable = false, length = 512)
-    private String metaKeywords = "";
+    // Дата создания
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "meta_description", nullable = false, length = 512)
-    private String metaDescription = "";
+    // Дата последнего обновления
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @Column
-    private Timestamp created;
-
-    @Column
-    private Boolean featured = false;
-
-    @Column(name = "external_id", nullable = false, length = 36)
-    private String externalId = "";
-
-    @Column
-    private Float rating = 0.0f;
-
-    @Column
-    private Integer votes = 0;
-
-    @Column
-    private String special = "";
-
-    @Column(name = "last_modify", nullable = false, insertable = false, updatable = false)
-    private Timestamp lastModify;
-
-    @Column(name = "main_category_id")
-    private Integer mainCategoryId;
-
-    @Column(name = "main_image_id")
-    private Integer mainImageId;
+    // Примечание:
+    // Связанные изображения предполагается хранить в отдельной таблице (например, ProductImage),
+    // см. ниже.
 }
