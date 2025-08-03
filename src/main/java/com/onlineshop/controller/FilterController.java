@@ -50,7 +50,6 @@ public class FilterController {
 
     }
 
-
     @GetMapping("/{id}")
     public String show(@PathVariable("id") String id, Model model) {
         FilterOption filterOption = filterService.getFilterOptionById(Integer.parseInt(id));
@@ -63,14 +62,16 @@ public class FilterController {
     }
 
     @PostMapping
-    public void saveOrUpdateOption(@ModelAttribute("filterOption") FilterOption filterOption) {
+    public String saveOrUpdateOption(@ModelAttribute("filterOption") FilterOption filterOption) {
          filterService.saveFilterOption(filterOption);
+        return "redirect:/admin/filters/" + filterOption.getId();
     }
 
     @PostMapping("/value")
-    public void saveOrUpdateValue(@ModelAttribute("filterValue") FilterValue filterValue)
+    public String saveOrUpdateValue(@ModelAttribute("filterValue") FilterValue filterValue)
     {
         filterService.saveFilterValue(filterValue);
+        return "redirect:/admin/filters/" + filterValue.getOptionId();
     }
 
     @DeleteMapping("/{id}")
@@ -80,11 +81,14 @@ public class FilterController {
         for (FilterValue filterValue : filterValueList) {
             filterService.deleteFilterValue(filterValue.getId());
         }
-        return "redirect:/admin/filters";
+        return "redirect:/admin/filters/"+id;
     }
+
     @DeleteMapping("/value/{id}")
     public String deleteValue(@PathVariable ("id") String id) {
+        int optionID = filterService.getFilterValueById(Integer.parseInt(id)).getOptionId();
         filterService.deleteFilterValue(Integer.parseInt(id));
-        return "redirect:/admin/filters";
+        System.out.println("delete " + optionID);
+        return "redirect:/admin/filters/"+optionID;
     }
 }
