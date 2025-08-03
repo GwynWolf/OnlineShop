@@ -11,6 +11,7 @@ public interface FilterDAO {
     FilterOption getFilterOptionById(int id);
     List<FilterValue> getFilterValueByIdFilterOption(int id);
     FilterValue getFilterValueById(int id);
+    List<FilterOption> getFilterOptionsByCategoryId(int categoryId);
     void saveFilterOption(FilterOption filterOption);
     void deleteFilterOption(int id);
     void saveFilterValue(FilterValue filterValue);

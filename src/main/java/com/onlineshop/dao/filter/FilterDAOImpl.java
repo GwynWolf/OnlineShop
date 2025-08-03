@@ -1,5 +1,6 @@
 package com.onlineshop.dao.filter;
 
+import com.onlineshop.entity.Category;
 import com.onlineshop.entity.FilterOption;
 import com.onlineshop.entity.FilterValue;
 import jakarta.persistence.EntityManager;
@@ -35,6 +36,15 @@ public class FilterDAOImpl implements FilterDAO {
     @Override
     public FilterValue getFilterValueById(int id) {
         return entityManager.find(FilterValue.class, id);
+    }
+
+    @Override
+    public List<FilterOption> getFilterOptionsByCategoryId(int categoryId) {
+        List<FilterOption> result = entityManager.createQuery("from FilterOption where categoryId = :categoryId", FilterOption.class).setParameter("categoryId", categoryId).getResultList();
+        int mainCategoryID = entityManager.createQuery("from Category where id = :categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult().getParentId();
+        List<FilterOption> result2 = entityManager.createQuery("from FilterOption where categoryId = :categoryId", FilterOption.class).setParameter("categoryId", mainCategoryID).getResultList();
+        result.addAll(result2);
+        return result;
     }
 
     @Override
