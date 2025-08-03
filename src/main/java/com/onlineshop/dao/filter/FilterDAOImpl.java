@@ -33,6 +33,11 @@ public class FilterDAOImpl implements FilterDAO {
     }
 
     @Override
+    public FilterValue getFilterValueById(int id) {
+        return entityManager.find(FilterValue.class, id);
+    }
+
+    @Override
     public void saveFilterOption(FilterOption filterOption) {
         if (filterOption.getId() == null) {
             entityManager.persist(filterOption);

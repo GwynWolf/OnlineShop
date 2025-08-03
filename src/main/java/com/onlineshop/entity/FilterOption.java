@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "filter_options")
@@ -33,4 +35,9 @@ public class FilterOption {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @Transient
+    private List<FilterValue> filterOptionList = new ArrayList<>();
+
+     
 }

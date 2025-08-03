@@ -35,6 +35,11 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
+    public FilterValue getFilterValueById(int id) {
+        return filterDAO.getFilterValueById(id);
+    }
+
+    @Override
     @Transactional
     public void saveFilterOption(FilterOption filterOption) {
         filterDAO.saveFilterOption(filterOption);

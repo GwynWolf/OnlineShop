@@ -10,6 +10,7 @@ public interface FilterDAO {
     List<FilterOption> getAllFilterOptions();
     FilterOption getFilterOptionById(int id);
     List<FilterValue> getFilterValueByIdFilterOption(int id);
+    FilterValue getFilterValueById(int id);
     void saveFilterOption(FilterOption filterOption);
     void deleteFilterOption(int id);
     void saveFilterValue(FilterValue filterValue);
