@@ -98,7 +98,16 @@
             </label>
         </div>
 
-        <button type="submit" class="btn">Сохранить</button>
+
+
+        <form method="post" action="${pageContext.request.contextPath}/admin/products/" style="display:inline;">
+            <input type="hidden" name="_method" value="post"/>
+            <button type="submit" class="btn btn-danger">Сохранить</button>
+        </form>
+        <form method="post" action="${pageContext.request.contextPath}/admin/products/${product.id}" style="display:inline;">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
         <a class="btn" href="${pageContext.request.contextPath}/admin/products">← Назад</a>
     </form>
 </div>

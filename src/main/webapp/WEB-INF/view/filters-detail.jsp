@@ -131,7 +131,7 @@
 <h3>Значения фильтра</h3>
 
 <!-- Таблица значений -->
-<c:if test="${not empty filterValueList}">
+ <c:if test="${not empty filterValueList}">
   <table>
     <thead>
     <tr>
@@ -150,7 +150,7 @@
         <td class="actions">
           <form method="post" action="${pageContext.request.contextPath}/admin/filters/value/${value.id}" style="display:inline;">
             <input type="hidden" name="_method" value="delete"/>
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить это значение?')">Удалить</button>
+            <button type="submit" class="btn btn-danger">Удалить</button>
           </form>
         </td>
       </tr>

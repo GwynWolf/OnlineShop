@@ -60,7 +60,9 @@
 
 <h2>Фильтры</h2>
 
+<a href="/OnlineStore/admin" class="back-button">← Назад в админку</a>
 <a href="${pageContext.request.contextPath}/admin/filters/new" class="create-button">+ Создать новый фильтр</a>
+
 
 <c:choose>
     <c:when test="${not empty filterOptionList}">
@@ -90,6 +92,12 @@
                     <td>${filter.categoryId}</td>
                     <td>${filter.isMain ? "Да" : "Нет"}</td>
                     <td>${filter.createdAt}</td>
+                    <td>
+                        <form method="post" action="${pageContext.request.contextPath}/admin/filters/${value.id}" style="display:inline;">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
