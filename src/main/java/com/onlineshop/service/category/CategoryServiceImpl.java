@@ -1,39 +1,51 @@
 package com.onlineshop.service.category;
 
 import com.onlineshop.dao.category.CategoryDAO;
+import com.onlineshop.dto.category.CategoryCreateDto;
+import com.onlineshop.dto.category.CategoryDto;
 import com.onlineshop.entity.CategoryNode;
 import com.onlineshop.entity.Category;
+import com.onlineshop.mapper.CategoryMapper;
+import com.onlineshop.util.CategoryTreeBuilder;
 import com.onlineshop.util.SlugUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryReadService, CategoryWriteService {
 
     @Autowired
     private CategoryDAO categoryDAO;
+    @Autowired
+    private CategoryTreeBuilder categoryTreeBuilder;
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
-    @Transactional
-    public List<Category> getAll() {
-        return categoryDAO.getAllCategories();
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getAll() {
+        List<Category> categories = categoryDAO.getAllCategories();
+        return categories.stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getAllIncludingHidden() {
+        return categoryDAO.getAllCategoriesIncludingHidden()
+                .stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public List<Category> getAllIncludingHidden() {
-        return categoryDAO.getAllCategoriesIncludingHidden();
-    }
-
-    @Override
-    @Transactional
-    public void save(Category category) {
+    public void save(CategoryCreateDto dto) {
+        Category category = categoryMapper.toEntity(dto);
         try {
             if (category.getSlug() == null || category.getSlug().isBlank()) {
                 String baseSlug = SlugUtil.toSlug(category.getName());
@@ -45,9 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
                 category.setSlug(uniqueSlug);
             }
             if (category.getParentId() != null && category.getParentId() != 0L) {
-                Category parent = categoryDAO.getCategory(category.getParentId().intValue());
+                Category parent = categoryDAO.getCategory(dto.getParentId().intValue());
                 if (parent == null) {
-                    throw new IllegalArgumentException("Parent category with ID " + category.getParentId() + " does no exist.");
+                    throw new IllegalArgumentException("Parent category with ID " + dto.getParentId() + " does no exist.");
                 }
             }
             categoryDAO.saveCategory(category);
@@ -59,8 +71,34 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public Category get(long id) {
-        return categoryDAO.getCategory(id);
+    public void update(long id, CategoryCreateDto dto) {
+        Category existing = categoryDAO.getCategory(id);
+        if (existing == null) {
+            throw new RuntimeException("Category not found");
+        }
+        existing.setName(dto.getName());
+        existing.setParentId(dto.getParentId());
+        existing.setVisible(dto.getVisible());
+        existing.setUrl(dto.getUrl());
+
+        String baseSlug = SlugUtil.toSlug(existing.getName());
+        String uniqueSlug = baseSlug;
+        long suffix = 1;
+        while (categoryDAO.slugExists(uniqueSlug)) {
+            uniqueSlug = baseSlug + "-" + suffix++;
+        }
+        existing.setSlug(uniqueSlug);
+        categoryDAO.saveCategory(existing);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CategoryDto get(long id) {
+        Category category = categoryDAO.getCategory(id);
+        if (category == null) {
+            throw new RuntimeException("Category not found");
+        }
+        return categoryMapper.toDto(category);
     }
 
     @Override
@@ -71,60 +109,27 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public List<CategoryNode> buildCategoryTree(List<Category> categories) {
-        Map<Long, CategoryNode> map = new HashMap<>();
-        List<CategoryNode> roots = new ArrayList<>();
-
-        for (Category c : categories) {
-            map.put(c.getId(), new CategoryNode(c));
-        }
-
-        for (Category c : categories) {
-            CategoryNode node = map.get(c.getId());
-            if (c.getParentId() == null || c.getParentId() == 0) {
-                roots.add(node);
-            } else {
-                CategoryNode parentNode = map.get(c.getParentId());
-                if (parentNode != null) {
-                    parentNode.getChildren().add(node);
-                    node.setParentId(parentNode.getId());
-                } else {
-                    roots.add(node);
-                }
-            }
-        }
-        return roots;
-    }
-
-    @Override
-    @Transactional
-    public List<Category> find(Boolean visible, Long parentId) {
-        return categoryDAO.findCategories(visible, parentId);
+    public List<CategoryDto> find(Boolean visible, Long parentId) {
+        return categoryDAO.findCategories(visible, parentId)
+                .stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<CategoryNode> getCategoryTree(Boolean visible, Long parentId) {
-        List<Category> categories = find(visible, null);
-        List<CategoryNode> fullTree = buildCategoryTree(categories);
+        List<CategoryDto> categoryDtos = find(visible, null);
+
+        List<Category> categories = categoryDtos.stream()
+                .map(categoryMapper::toEntity)
+                .collect(Collectors.toList());
+
+        List<CategoryNode> fullTree = categoryTreeBuilder.buildCategoryTree(categories);
 
         if (parentId != null) {
-            CategoryNode subtree = findSubtreeNode(fullTree, parentId);
+            CategoryNode subtree = categoryTreeBuilder.findSubtreeNode(fullTree, parentId);
             return subtree != null ? List.of(subtree) : List.of();
         }
-
         return fullTree;
-    }
-
-    private CategoryNode findSubtreeNode(List<CategoryNode> nodes, Long parentId) {
-        for (CategoryNode node : nodes) {
-            if (node.getId().equals(parentId)) {
-                return node;
-            }
-            CategoryNode found = findSubtreeNode(node.getChildren(), parentId);
-            if (found != null) {
-                return found;
-            }
-        }
-        return null;
     }
 }
