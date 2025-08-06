@@ -5,19 +5,28 @@
 <head>
     <title>Список товаров</title>
     <style>
-        .product-card {
-            display: inline-block;
-            width: 200px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            vertical-align: top;
-            text-align: center;
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
         }
 
-        .product-card img {
-            max-width: 100%;
-            height: auto;
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-info {
+            flex-grow: 1;
         }
 
         .product-card a {
@@ -30,9 +39,9 @@
             color: darkblue;
         }
 
-        .back-button {
+        .back-button, .create-button {
             display: inline-block;
-            margin: 20px 0;
+            margin: 10px 5px 20px 0;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
@@ -40,26 +49,38 @@
             border-radius: 5px;
         }
 
-        .back-button:hover {
+        .back-button:hover,
+        .create-button:hover {
             background-color: #0056b3;
+        }
+
+        .slug {
+            font-size: 12px;
+            color: gray;
         }
     </style>
 </head>
 <body>
 
-<h2>Товары</h2>
+<div class="container">
+    <h2>Список товаров</h2>
 
-<a href="/OnlineStore/admin" class="back-button">← Назад в админку</a>
+    <a href="/OnlineStore/admin" class="back-button">← Назад в админку</a>
+    <a href="/OnlineStore/admin/products/new" class="create-button">+ Создать товар</a>
 
-<c:forEach var="product" items="${products}">
-    <div class="product-card">
-        <a href="/OnlineStore/admin/products/${product.id}">
-            <!--<img src="/images/products/${product.mainImageId}.jpg" alt="${product.name}" />-->
-            <div>${product.name}</div>
-        </a>
-        <div style="font-size: 12px; color: gray;">${product.url}</div>
+    <div class="product-list">
+        <c:forEach var="product" items="${products}">
+            <div class="product-card">
+                <div class="product-info">
+                    <a href="/OnlineStore/admin/products/${product.id}">
+                            ${product.name}
+                    </a>
+                    <div class="slug">${product.slug}</div>
+                </div>
+            </div>
+        </c:forEach>
     </div>
-</c:forEach>
+</div>
 
 </body>
 </html>
