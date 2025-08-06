@@ -1,53 +1,67 @@
 package com.onlineshop.controller;
 
+import com.onlineshop.dto.category.CategoryCreateDto;
+import com.onlineshop.dto.category.CategoryDto;
 import com.onlineshop.entity.CategoryNode;
-import com.onlineshop.entity.Category;
-import com.onlineshop.service.category.CategoryService;
+import com.onlineshop.service.category.CategoryReadService;
+import com.onlineshop.service.category.CategoryWriteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin/categories")
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryReadService categoryReadService;
+    @Autowired
+    private CategoryWriteService categoryWriteService;
 
-    @GetMapping
-    public String showAllCategories(Model model) {
-        List<Category> all = categoryService.getAll();
-        List<CategoryNode> tree = categoryService.buildCategoryTree(all);
-        model.addAttribute("categoryTree", tree);
-        return "categories/list";
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CategoryDto> getAllCategories(
+            @RequestParam(value = "visible", required = false) Boolean visible,
+            @RequestParam(value = "parentId", required = false) Long parentId) {
+        return categoryReadService.find(visible, parentId);
     }
 
-    @GetMapping("/new")
-    public String newCategoryForm(Model model) {
-        model.addAttribute("category", new Category());
-        model.addAttribute("allCategories", categoryService.getAll());
-        return "categories/form";
+    @GetMapping(value = "/tree", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CategoryNode> getCategoryTree(
+            @RequestParam(value = "visible", required = false) Boolean visible,
+            @RequestParam(value = "parentId", required = false) Long parentId
+    ) {
+        return categoryReadService.getCategoryTree(visible, parentId);
     }
 
-    @PostMapping("/save")
-    public String saveCategory(@ModelAttribute("category") Category category) {
-        categoryService.save(category);
-        return "redirect:/admin/categories";
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable("id") long id) {
+        CategoryDto dto = categoryReadService.get(id);
+        if (dto == null || Boolean.FALSE.equals(dto.getVisible())) {
+            throw new RuntimeException("Category not found or deactivated");
+        }
+        return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/edit")
-    public String editCategory(@RequestParam("id") int id, Model model) {
-        model.addAttribute("category", categoryService.get(id));
-        model.addAttribute("allCategories", categoryService.getAll());
-        return "categories/form";
+    @PostMapping
+    public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryCreateDto dto) {
+        categoryWriteService.save(dto);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/delete")
-    public String deleteCategory(@RequestParam("id") int id) {
-        categoryService.delete(id);
-        return "redirect:/admin/categories";
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateCategory(@PathVariable("id") long id,
+                                               @Valid @RequestBody CategoryCreateDto dto) {
+        categoryWriteService.update(id, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") long id) {
+        categoryWriteService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }
