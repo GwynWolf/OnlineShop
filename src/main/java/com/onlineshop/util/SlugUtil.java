@@ -1,8 +1,11 @@
 package com.onlineshop.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class SlugUtil {
     private static final Map<Character, String> translitMap = new HashMap<>();
 
