@@ -7,45 +7,46 @@
 <body>
 <h1>${category.id == null ? "Нова категорія" : "Редагування категорії"}</h1>
 
-<form action="${pageContext.request.contextPath}/admin/categories/save" method="post">
-    <input type="hidden" name="id" value="${category.id}"/>
+<form method="post" action="${pageContext.request.contextPath}/admin/categories/save">
+    <input type="hidden" name="id" value="${category.id}" />
 
-    <p>
-        <label for="name">Назва:</label><br/>
-        <input type="text" id="name" name="name" value="${category.name}" required/>
-    </p>
+    <label>Назва:</label><br/>
+    <input type="text" name="name" id="name" value="${category.name}" required/><br/>
 
-    <p>
-        <label for="url">URL:</label><br/>
-        <input type="text" id="url" name="url" value="${category.url}"/>
-    </p>
+    <label>Slug:</label><br/>
+    <input type="text" name="slug" id="slug" value="${category.slug}"/><br/>
 
-    <p>
-        <label for="parentId">Батьківська категорія:</label><br/>
-        <select name="parentId" id="parentId">
-            <option value="0">-- Немає --</option>
-            <c:forEach var="cat" items="${allCategories}">
-                <c:if test="${cat.id != category.id}">
-                    <option value="${cat.id}" ${cat.id == category.parentId ? "selected" : ""}>
-                            ${cat.name}
-                    </option>
-                </c:if>
-            </c:forEach>
-        </select>
-    </p>
+    <label>Батьківська категорія:</label><br/>
+    <select name="parentId">
+        <option value="">—</option>
+        <c:forEach var="cat" items="${allCategories}">
+            <c:if test="${cat.id ne category.id}">
+                <option value="${cat.id}" ${cat.id == category.parentId ? 'selected' : ''}>
+                        ${cat.name}
+                </option>
+            </c:if>
+        </c:forEach>
+    </select><br/>
 
-    <p>
-        <label>
-            <input type="checkbox" name="visible" value="true"
-            ${category.visible ? "checked" : ""} />
-            Видима категорія
-        </label>
-    </p>
+    <label>Статус:</label>
+    <input type="checkbox" name="visible" value="true" ${category.visible ? 'checked' : ''}/> Active<br/>
 
-    <p>
-        <button type="submit">Зберегти</button>
-        <a href="${pageContext.request.contextPath}/admin/categories">Скасувати</a>
-    </p>
+    <button type="submit">Зберегти</button>
+    <c:if test="${category.id != null}">
+        <a href="${pageContext.request.contextPath}/admin/categories/delete?id=${category.id}"
+           onclick="return confirm('Видалити категорію?');">Видалити</a>
+    </c:if>
 </form>
+
+<script>
+    document.getElementById('name').addEventListener('input', function () {
+        const slug = this.value.toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9\-а-яіїєґ]/gi, '')
+            .replace(/\-+/g, '-')
+            .replace(/^\-+|\-+$/g, '');
+        document.getElementById('slug').value = slug;
+    });
+</script>
 </body>
 </html>

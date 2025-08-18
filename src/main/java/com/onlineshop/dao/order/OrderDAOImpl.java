@@ -1,26 +1,77 @@
 package com.onlineshop.dao.order;
 
+import com.onlineshop.dto.order.OrderFilterDto;
 import com.onlineshop.entity.Order;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public class OrderDAOImpl implements OrderDAO {
 
-    @Autowired
-    SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    @Transactional
-    public List<Order> getAllOrders() {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Order> query = session.createQuery("from Order", Order.class);
+    public List<Order> findAll() {
+        return entityManager.createQuery("FROM Order o", Order.class).getResultList();
+    }
+
+    @Override
+    public Order findById(Long id) {
+        return entityManager.find(Order.class, id);
+    }
+
+    @Override
+    public void save(Order order) {
+        entityManager.persist(order);
+    }
+
+    @Override
+    public void update(Order order) {
+        entityManager.merge(order);
+    }
+
+    @Override
+    public void delete(Order order) {
+        entityManager.remove(order);
+    }
+
+    @Override
+    public List<Order> findFiltered(OrderFilterDto filter) {
+        StringBuilder sb = new StringBuilder("SELECT o FROM Order o WHERE 1=1");
+
+        if (filter.getStatus() != null) {
+            sb.append(" AND o.status = :status");
+        }
+        if (filter.getUserId() != null) {
+            sb.append(" AND o.userId = :userId");
+        }
+        if (filter.getFrom() != null) {
+            sb.append(" AND o.createdAt >= :from");
+        }
+        if (filter.getTo() != null) {
+            sb.append(" AND o.createdAt <= :to");
+        }
+
+        TypedQuery<Order> query = entityManager.createQuery(sb.toString(), Order.class);
+
+        if (filter.getStatus() != null) {
+            query.setParameter("status", filter.getStatus());
+        }
+        if (filter.getUserId() != null) {
+            query.setParameter("userId", filter.getUserId());
+        }
+        if (filter.getFrom() != null) {
+            query.setParameter("from", filter.getFrom().atStartOfDay());
+        }
+        if (filter.getTo() != null) {
+            query.setParameter("to", filter.getTo().atTime(LocalTime.MAX));
+        }
         return query.getResultList();
     }
 }
