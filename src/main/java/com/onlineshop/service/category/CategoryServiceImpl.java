@@ -11,6 +11,7 @@ import com.onlineshop.util.SlugUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,10 +73,8 @@ public class CategoryServiceImpl implements CategoryReadService, CategoryWriteSe
     @Override
     @Transactional
     public void update(long id, CategoryCreateDto dto) {
-        Category existing = categoryDAO.getCategory(id);
-        if (existing == null) {
-            throw new RuntimeException("Category not found");
-        }
+        Category existing = findEntityByIdOrThrow(id);
+
         existing.setName(dto.getName());
         existing.setParentId(dto.getParentId());
         existing.setVisible(dto.getVisible());
@@ -94,11 +93,8 @@ public class CategoryServiceImpl implements CategoryReadService, CategoryWriteSe
     @Override
     @Transactional(readOnly = true)
     public CategoryDto get(long id) {
-        Category category = categoryDAO.getCategory(id);
-        if (category == null) {
-            throw new RuntimeException("Category not found");
-        }
-        return categoryMapper.toDto(category);
+
+        return findByIdOrThrow(id);
     }
 
     @Override
@@ -131,5 +127,21 @@ public class CategoryServiceImpl implements CategoryReadService, CategoryWriteSe
             return subtree != null ? List.of(subtree) : List.of();
         }
         return fullTree;
+    }
+
+    private CategoryDto findByIdOrThrow(long id) {
+        Category category = categoryDAO.getCategory(id);
+        if (category == null) {
+            throw new RuntimeException("Category not found");
+        }
+        return categoryMapper.toDto(category);
+    }
+
+    private Category findEntityByIdOrThrow(long id) {
+        Category category = categoryDAO.getCategory(id);
+        if (category == null) {
+            throw new RuntimeException("Category not found");
+        }
+        return category;
     }
 }
