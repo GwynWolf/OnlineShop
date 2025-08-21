@@ -27,6 +27,7 @@ public class FilterController {
     public String showAll(Model model) {
         List<FilterOption> filterOptionList = filterService.getAllFilterOptions();
         model.addAttribute("filterOptionList", filterOptionList);
+
         return "filters";
     }
 
@@ -39,6 +40,7 @@ public class FilterController {
         model.addAttribute("filterOption", filterOption);
         model.addAttribute("filterValueList", filterValueList);
         model.addAttribute("categoryList", categoryList);
+
         return "filters-detail";
     }
 
@@ -58,12 +60,14 @@ public class FilterController {
         model.addAttribute("filterOption", filterOption);
         model.addAttribute("filterValueList", filterValueList);
         model.addAttribute("categoryList", categoryList);
+
         return "filters-detail";
     }
 
     @PostMapping
     public String saveOrUpdateOption(@ModelAttribute("filterOption") FilterOption filterOption) {
          filterService.saveFilterOption(filterOption);
+
         return "redirect:/admin/filters/" + filterOption.getId();
     }
 
@@ -71,6 +75,7 @@ public class FilterController {
     public String saveOrUpdateValue(@ModelAttribute("filterValue") FilterValue filterValue)
     {
         filterService.saveFilterValue(filterValue);
+
         return "redirect:/admin/filters/" + filterValue.getOptionId();
     }
 
@@ -81,6 +86,7 @@ public class FilterController {
         for (FilterValue filterValue : filterValueList) {
             filterService.deleteFilterValue(filterValue.getId());
         }
+
         return "redirect:/admin/filters/"+id;
     }
 
@@ -89,6 +95,7 @@ public class FilterController {
         int optionID = filterService.getFilterValueById(Integer.parseInt(id)).getOptionId();
         filterService.deleteFilterValue(Integer.parseInt(id));
         System.out.println("delete " + optionID);
+
         return "redirect:/admin/filters/"+optionID;
     }
 }

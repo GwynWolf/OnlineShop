@@ -16,15 +16,12 @@ public class FilterOption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Название фильтра (например, "Цвет")
     @Column(nullable = false, length = 255)
     private String name;
 
-    // Категория, к которой относится фильтр
     @Column(name = "category_id", nullable = false)
     private Integer categoryId;
 
-    // Основной фильтр для категории?
     @Column(name = "is_main", nullable = false)
     private Boolean isMain = false;
 

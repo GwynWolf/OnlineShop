@@ -14,11 +14,9 @@ public class FilterValue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Ссылка на filter_option
     @Column(name = "option_id", nullable = false)
     private Integer optionId;
 
-    // Значение фильтра (например, "Черный")
     @Column(nullable = false, length = 255)
     private String value;
 
