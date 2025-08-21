@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -97,10 +98,37 @@
                 Отображать товар на сайте
             </label>
         </div>
+        <form method="post" action="${pageContext.request.contextPath}/admin/products/${product.id}/filters/save" style="display:inline;">
+            <input type="hidden" name="_method" value="post"/>
+            <table border="1">
+                <tr>
+                    <th>Свойство</th>
+                    <th>Значения</th>
+                </tr>
+                <c:forEach var="entry" items="${tableOptions}">
+                    <tr>
+                        <td>${entry.key}</td>
+                        <td>
+                            <select name="selectedFilters">
+                                <option value="">-- выберите --</option>
+                                <c:forEach var="option" items="${entry.value}">
+                                     <option value="${option.id}"
+                                            <c:if test="${fn:contains(selectedValueIds, option.id)}">selected</c:if>>
+                                            ${option.value}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <button type="submit" class="btn btn-danger">Сохранить фильтры</button>
+        </form>
 
 
 
-        <form method="post" action="${pageContext.request.contextPath}/admin/products/" style="display:inline;">
+
+        <form method="post" action="${pageContext.request.contextPath}/admin/products" style="display:inline;">
             <input type="hidden" name="_method" value="post"/>
             <button type="submit" class="btn btn-danger">Сохранить</button>
         </form>
