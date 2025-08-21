@@ -20,20 +20,17 @@ public class ProductsDAOImpl implements ProductsDAO {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public List<Products> getAllProducts() {
        return entityManager.createQuery("from Products", Products.class).getResultList();
     }
 
     @Override
-    @Transactional
     public Products getProductById(int id) {
         return entityManager.find(Products.class, id);
 
     }
 
     @Override
-    @Transactional
     public void save(Products product) {
         if (product.getId() == null) {
             entityManager.persist(product);
@@ -43,13 +40,11 @@ public class ProductsDAOImpl implements ProductsDAO {
     }
 
     @Override
-    @Transactional
     public void delete(Products product) {
             entityManager.remove(product);
     }
 
     @Override
-    @Transactional
     public void delete(int id) {
         entityManager.remove(entityManager.find(Products.class, id));
     }
