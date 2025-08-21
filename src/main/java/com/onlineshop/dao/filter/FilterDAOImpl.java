@@ -3,11 +3,14 @@ package com.onlineshop.dao.filter;
 import com.onlineshop.entity.Category;
 import com.onlineshop.entity.FilterOption;
 import com.onlineshop.entity.FilterValue;
+import com.onlineshop.entity.ProductFilterValues;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class FilterDAOImpl implements FilterDAO {
@@ -41,10 +44,24 @@ public class FilterDAOImpl implements FilterDAO {
     @Override
     public List<FilterOption> getFilterOptionsByCategoryId(int categoryId) {
         List<FilterOption> result = entityManager.createQuery("from FilterOption where categoryId = :categoryId", FilterOption.class).setParameter("categoryId", categoryId).getResultList();
-        int mainCategoryID = entityManager.createQuery("from Category where id = :categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult().getParentId();
-        List<FilterOption> result2 = entityManager.createQuery("from FilterOption where categoryId = :categoryId", FilterOption.class).setParameter("categoryId", mainCategoryID).getResultList();
-        result.addAll(result2);
+        /*int mainCategoryID = entityManager.createQuery("from Category where id = :categoryId", Category.class).setParameter("categoryId", categoryId).getSingleResult().getParentId();
+        if(mainCategoryID>0) {
+            List<FilterOption> result2 = entityManager.createQuery("from FilterOption where categoryId = :categoryId", FilterOption.class).setParameter("categoryId", mainCategoryID).getResultList();
+            result.addAll(result2);
+        }*/
         return result;
+    }
+
+    @Override
+    public List<ProductFilterValues> getProductFilterValuesByProductId(int productId) {
+        List<ProductFilterValues> productFilterValues = entityManager.createQuery("from ProductFilterValues where product_id =:productId", ProductFilterValues.class)
+                .setParameter("productId", productId)
+                .getResultList();
+        for (ProductFilterValues productFilterValue : productFilterValues) {
+            productFilterValue.setFilterValue(entityManager.find(FilterValue.class, productFilterValue.getValue_id()));
+            productFilterValue.setFilterOption(entityManager.find(FilterOption.class, productFilterValue.getOption_id()));
+        }
+        return productFilterValues;
     }
 
     @Override
@@ -54,6 +71,13 @@ public class FilterDAOImpl implements FilterDAO {
         } else {
             entityManager.merge(filterOption);
         }
+    }
+
+    @Override
+    public void saveProductFilterValues(ProductFilterValues productFilterValues) {
+        entityManager.createQuery("delete from ProductFilterValues where product_id =:productId", ProductFilterValues.class)
+                .setParameter("productId", productFilterValues.getProduct_id());
+        entityManager.persist(productFilterValues);
     }
 
     @Override
